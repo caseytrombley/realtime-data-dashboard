@@ -1,13 +1,38 @@
-<script setup lang="ts">
-</script>
-
 <template>
-  <div class="text-3xl font-bold text-cyan-200 underline">
-    Hello Tailwind v4 + Vite!
+  <div class="min-h-screen bg-gray-50 p-6">
+    <h1 class="text-3xl font-bold mb-6">⚡ Energy Dashboard</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Line Chart -->
+      <div class="bg-white rounded-xl shadow p-4">
+        <h2 class="text-xl font-semibold mb-2">Monthly Usage</h2>
+        <LineChart />
+      </div>
+
+      <!-- Bar Chart -->
+      <div class="bg-white rounded-xl shadow p-4">
+        <h2 class="text-xl font-semibold mb-2">Daily Consumption</h2>
+        <BarChart />
+      </div>
+
+      <!-- Pie Chart -->
+      <div class="bg-white rounded-xl shadow p-4">
+        <h2 class="text-xl font-semibold mb-2">Energy Source Breakdown</h2>
+        <PieChart />
+      </div>
+
+      <!-- Radar Chart -->
+      <div class="bg-white rounded-xl shadow p-4">
+        <h2 class="text-xl font-semibold mb-2">Performance Metrics</h2>
+        <RadarChart />
+      </div>
+    </div>
   </div>
 </template>
 
-
-<style scoped>
-
-</style>
+<script setup lang="ts">
+import LineChart from './components/LineChart.vue'
+import BarChart from './components/BarChart.vue'
+import PieChart from './components/PieChart.vue'
+import RadarChart from './components/RadarChart.vue'
+</script>
