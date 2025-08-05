@@ -1,4 +1,5 @@
-import { GraphQLObjectType, GraphQLSchema, GraphQLFloat, GraphQLString } from 'graphql'
+// schema.js
+import { GraphQLObjectType, GraphQLSchema, GraphQLFloat, GraphQLString, GraphQLBoolean } from 'graphql'
 import { pubsub, ENERGY_USAGE_UPDATED } from './pubsub.js'
 
 const EnergyUsageType = new GraphQLObjectType({
@@ -6,6 +7,7 @@ const EnergyUsageType = new GraphQLObjectType({
     fields: {
         timestamp: { type: GraphQLString },
         value: { type: GraphQLFloat },
+        alert: { type: GraphQLBoolean },
     },
 })
 
@@ -24,8 +26,7 @@ export const schema = new GraphQLSchema({
         fields: {
             energyUsageUpdated: {
                 type: EnergyUsageType,
-                subscribe: () =>
-                    pubsub.asyncIterableIterator(ENERGY_USAGE_UPDATED),
+                subscribe: () => pubsub.asyncIterableIterator(ENERGY_USAGE_UPDATED),
             },
         },
     }),

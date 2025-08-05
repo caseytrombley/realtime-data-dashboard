@@ -1,10 +1,3 @@
-<template>
-  <div>
-    <h2 class="text-xl font-semibold mb-2">Real-Time Energy Usage</h2>
-    <Line :data="chartData" :options="chartOptions" />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { shallowRef, watch } from 'vue'
 import { useSubscription } from '@vue/apollo-composable'
@@ -22,6 +15,10 @@ import {
   type ChartData,
 } from 'chart.js'
 import gql from 'graphql-tag'
+import { useToast } from 'vue-toastification'
+
+// Toast instance
+const toast = useToast()
 
 // Register Chart.js components
 ChartJS.register(
@@ -41,6 +38,7 @@ const ENERGY_USAGE_SUBSCRIPTION = gql`
     energyUsageUpdated {
       timestamp
       value
+      alert
     }
   }
 `
@@ -79,7 +77,12 @@ watch(result, (newVal) => {
   console.log('Subscription data:', newVal)
 
   if (newVal?.energyUsageUpdated) {
-    const { timestamp, value } = newVal.energyUsageUpdated
+    const { timestamp, value, alert } = newVal.energyUsageUpdated
+
+    // 🔔 Show toast if alert is true
+    if (alert) {
+      toast.error(`⚠️ High usage: ${value} kWh`, { timeout: 5000 })
+    }
 
     const oldLabels = chartData.value.labels as string[]
     const oldData = chartData.value.datasets[0].data as number[]
@@ -106,5 +109,11 @@ watch(result, (newVal) => {
     }
   }
 })
-
 </script>
+
+<template>
+  <div>
+    <h2 class="text-xl font-semibold mb-2">Real-Time Energy Usage</h2>
+    <Line :data="chartData" :options="chartOptions" />
+  </div>
+</template>

@@ -1,12 +1,17 @@
 <script setup lang="ts">
+import GlobalAlertListener from './components/GlobalAlertListener.vue'
+
 import LineChart from './components/LineChart.vue'
 import BarChart from './components/BarChart.vue'
 import PieChart from './components/PieChart.vue'
 import RadarChart from './components/RadarChart.vue'
 import EnergyUsageLive from './components/EnergyUsageLive.vue'
+
 </script>
 
 <template>
+  <GlobalAlertListener />
+
   <div class="min-h-screen bg-gray-50 p-6">
     <h1 class="text-3xl font-bold mb-6">⚡ Energy Dashboard</h1>
 

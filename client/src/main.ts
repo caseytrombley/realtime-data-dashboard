@@ -12,6 +12,9 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { createClient } from 'graphql-ws'
 import { getMainDefinition } from '@apollo/client/utilities'
 
+import Toast from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
+
 // HTTP connection to the API
 const httpLink = new HttpLink({
     uri: 'http://localhost:4000/graphql',
@@ -49,6 +52,14 @@ const app = createApp({
         provide(DefaultApolloClient, apolloClient)
     },
     render: () => h(App),
+})
+
+app.use(Toast, {
+    position: 'top-right',
+    timeout: 5000,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
 })
 
 app.mount('#app')
