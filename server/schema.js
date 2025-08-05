@@ -1,10 +1,12 @@
 // schema.js
-import { GraphQLObjectType, GraphQLSchema, GraphQLFloat, GraphQLString, GraphQLBoolean } from 'graphql'
+import { GraphQLID, GraphQLObjectType, GraphQLSchema, GraphQLFloat, GraphQLString, GraphQLBoolean } from 'graphql'
+
 import { pubsub, ENERGY_USAGE_UPDATED } from './pubsub.js'
 
 const EnergyUsageType = new GraphQLObjectType({
     name: 'EnergyUsage',
     fields: {
+        id: { type: GraphQLID },
         timestamp: { type: GraphQLString },
         value: { type: GraphQLFloat },
         alert: { type: GraphQLBoolean },

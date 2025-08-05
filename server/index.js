@@ -98,6 +98,7 @@ async function start() {
         }
 
         const data = {
+            id: Date.now().toString(),
             value: Math.round(currentValue),
             timestamp: new Date().toISOString(),
             alert

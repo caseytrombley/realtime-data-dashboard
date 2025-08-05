@@ -5,7 +5,7 @@ import LineChart from './components/LineChart.vue'
 import BarChart from './components/BarChart.vue'
 import PieChart from './components/PieChart.vue'
 import RadarChart from './components/RadarChart.vue'
-import EnergyUsageLive from './components/EnergyUsageLive.vue'
+import EnergyUsageBar from './components/EnergyUsageBar.vue'
 
 </script>
 
@@ -18,7 +18,7 @@ import EnergyUsageLive from './components/EnergyUsageLive.vue'
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Realtime Energy Usage -->
       <div class="bg-white rounded-xl shadow p-4 md:col-span-2">
-        <EnergyUsageLive />
+        <EnergyUsageBar />
       </div>
       <!-- Line Chart -->
       <div class="bg-white rounded-xl shadow p-4">

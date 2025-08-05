@@ -1,32 +1,29 @@
 <script setup lang="ts">
 import { shallowRef, watch } from 'vue'
 import { useSubscription } from '@vue/apollo-composable'
-import { Line } from 'vue-chartjs'
+import { Bar } from 'vue-chartjs'
 import {
   Chart as ChartJS,
   Title,
   Tooltip,
   Legend,
-  LineElement,
-  PointElement,
+  BarElement,
   CategoryScale,
   LinearScale,
   Filler,
   type ChartData,
 } from 'chart.js'
 import gql from 'graphql-tag'
-import { useToast } from 'vue-toastification'
+import {useToast} from "vue-toastification";
 
-// Toast instance
 const toast = useToast()
 
-// Register Chart.js components
+// Register Chart.js components for bar chart
 ChartJS.register(
     Title,
     Tooltip,
     Legend,
-    LineElement,
-    PointElement,
+    BarElement,
     CategoryScale,
     LinearScale,
     Filler
@@ -44,16 +41,14 @@ const ENERGY_USAGE_SUBSCRIPTION = gql`
   }
 `
 
-// Use shallowRef to avoid Vue deep proxying Chart.js objects
-const chartData = shallowRef<ChartData<'line'>>({
+// Chart data state
+const chartData = shallowRef<ChartData<'bar'>>({
   labels: [],
   datasets: [
     {
       label: 'kW Usage',
       data: [],
-      borderColor: '#3b82f6',
-      backgroundColor: 'rgba(59, 130, 246, 0.3)',
-      fill: true,
+      backgroundColor: 'rgba(59, 130, 246, 0.5)',
     },
   ],
 })
@@ -65,6 +60,9 @@ const chartOptions = {
   },
 }
 
+// List data
+const readings = shallowRef<{ timestamp: string; value: number }[]>([])
+
 // Apollo subscription hook
 const { result, error } = useSubscription(ENERGY_USAGE_SUBSCRIPTION)
 
@@ -75,13 +73,11 @@ watch(error, (err) => {
 
 // Data watcher
 watch(result, (newVal) => {
-  console.log('Subscription data:', newVal)
-
   if (newVal?.energyUsageUpdated) {
-    const { timestamp, value, alert } = newVal.energyUsageUpdated
 
-    // 🔔 Show toast if alert is true
-    if (alert) {
+    const { timestamp, value } = newVal.energyUsageUpdated
+
+    if (newVal.energyUsageUpdated.alert) {
       toast.error(`⚠️ High usage: ${value} kWh`, { timeout: 5000 })
     }
 
@@ -97,7 +93,7 @@ watch(result, (newVal) => {
       newData.shift()
     }
 
-    // Reassign a whole new object so Vue notices
+    // Update chart
     chartData.value = {
       ...chartData.value,
       labels: newLabels,
@@ -108,13 +104,26 @@ watch(result, (newVal) => {
         },
       ],
     }
+
+    // Update list
+    readings.value = [
+      ...readings.value,
+      { timestamp: new Date(timestamp).toLocaleTimeString(), value }
+    ].slice(-10) // keep last 10
   }
 })
 </script>
 
 <template>
   <div>
-    <h2 class="text-xl font-semibold mb-2">Real-Time Energy Usage</h2>
-    <Line :data="chartData" :options="chartOptions" />
+    <h2 class="text-xl font-semibold mb-2">Energy Usage (Bar)</h2>
+    <Bar :data="chartData" :options="chartOptions" />
+
+    <h3 class="text-lg font-semibold mt-4">Recent Readings</h3>
+    <ul class="mt-2 space-y-1">
+      <li v-for="(reading, idx) in readings" :key="idx" class="text-sm">
+        {{ reading.timestamp }} — <strong>{{ reading.value }} kWh</strong>
+      </li>
+    </ul>
   </div>
 </template>

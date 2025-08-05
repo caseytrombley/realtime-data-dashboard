@@ -8,6 +8,8 @@ const toast = useToast()
 const SUBSCRIBE_USAGE = gql`
   subscription {
     energyUsageUpdated {
+      id
+      timestamp
       value
       alert
     }
